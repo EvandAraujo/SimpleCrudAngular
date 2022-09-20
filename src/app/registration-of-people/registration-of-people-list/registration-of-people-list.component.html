@@ -1,0 +1,134 @@
+<div class="container">
+  <ngx-spinner></ngx-spinner>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
+  <div class="row">
+    <div class="title">
+      <h3>Cadastro de Pessoas</h3>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <input type="search" (keyup.enter)="getAllPersons()" [(ngModel)]="simpleFilter.term" maxlength="50" class="form-control"
+          placeholder="Pesquisar por Nome" />
+      </div>
+      <div class="col-6">
+        <div class="btn-container-invite">
+          <button (click)="enableForm()" type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#modalRegistrationOfPerson">
+            Adicionar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Nome</th>
+          <th scope="col">Sobre Nome</th>
+          <th scope="col">E-Mail</th>
+          <th scope="col">Telefone</th>
+          <th scope="col">Nacionalidade</th>
+          <th scope="col">CEP</th>
+          <th scope="col">Cidade</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Editar</th>
+          <th scope="col">excluir</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let person of people">
+        <tr>
+          <td>{{person.name}}</td>
+          <td>{{person.lastName}}</td>
+          <td>{{person.email}}</td>
+          <td>{{person.phoneNumber! | mask: '(000)00000-0000'}}</td>
+          <td>{{person.nationality}}</td>
+          <td>{{person.zoneInformationPostalCode! | mask: '00000-000'}}</td>
+          <td>{{person.city}}</td>
+          <td>{{person.brazilianUf!.name}}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" (click)="enableForm(person)" data-bs-toggle="modal"
+              data-bs-target="#modalRegistrationOfPerson">Editar</button>
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="deletePerson(person)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer-pagination">
+    <app-base-paginator [collectionSize]="collectionSize" [pageIndex]="simpleFilter.pageIndex ?? 0 "
+      [pageSize]="simpleFilter.pageSize ?? 0" (getData)="getAllPersons($event)">
+    </app-base-paginator>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalRegistrationOfPerson" tabindex="-1" aria-labelledby="modalRegistrationOfPersonLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-xxl-down">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalRegistrationOfPersonLabel">Cadastro de Pessoas</h5>
+        <button (click)="alterModalOpenForClosed()" type="button" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="modalOpen" [formGroup]="form">
+          <div class="row">
+            <div class="col-9 input">
+              <input type="text" formControlName="name" [ngClass]="validationsFormService.applyCssErro(form, 'name')" maxlength="100" class="form-control" placeholder="Nome" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-5 input">
+              <input type="text" formControlName="lastName" [ngClass]="validationsFormService.applyCssErro(form, 'lastName')" maxlength="100" class="form-control"
+                placeholder="Sobrenome" />
+            </div>
+            <div class="col-5 input">
+              <input type="text" formControlName="nationality" [ngClass]="validationsFormService.applyCssErro(form, 'nationality')" maxlength="100" class="form-control"
+                placeholder="Nacionalidade" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3 input">
+              <input type="text" mask="00000-000" formControlName="zoneInformationPostalCode" [ngClass]="validationsFormService.applyCssErro(form, 'zoneInformationPostalCode')" maxlength="100" class="form-control"
+                placeholder="CEP" />
+            </div>
+            <div class="col-3 input">
+              <select class="form-select" (change)="onBrazilianUfChange($event)" formControlName="brazilianUfId" [ngClass]="validationsFormService.applyCssErro(form, 'brazilianUfId')">
+                <option [value]="null">Selecione um Estado</option>
+                <option *ngFor="let brazilianUfStatic of brazilianUfStatics" value="{{brazilianUfStatic.id}}">
+                  {{brazilianUfStatic.name}}</option>
+              </select>
+            </div>
+            <div class="col-3 input">
+              <input type="text" formControlName="city" [ngClass]="validationsFormService.applyCssErro(form, 'city')" maxlength="100" class="form-control" placeholder="Cidade" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-9 input">
+              <input type="text" formControlName="publicPlace" [ngClass]="validationsFormService.applyCssErro(form, 'publicPlace')" maxlength="100" class="form-control"
+                placeholder="Logradouro" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-5 input">
+              <input pe="email" formControlName="email" [ngClass]="validationsFormService.applyCssErro(form, 'email')" maxlength="100" class="form-control" placeholder="E-Mail" />
+            </div>
+            <div class="col-5 input">
+              <input type="text"  formControlName="phoneNumber" mask="(000)00000-0000"  [ngClass]="validationsFormService.applyCssErro(form, 'phoneNumber')" maxlength="100" class="form-control"
+                placeholder="Telefone" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="alterModalOpenForClosed()" type="button" class="btn btn-secondary"
+          data-bs-dismiss="modal">Close</button>
+        <button (click)="save()" [disabled]="form && !form.valid" type="button" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>

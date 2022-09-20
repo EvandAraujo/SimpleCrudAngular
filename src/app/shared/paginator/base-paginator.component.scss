@@ -1,0 +1,47 @@
+::ng-deep {
+    ngb-pagination {
+      ul>li.active>a>span {
+        display: none !important;
+      }
+  
+      .page-link:focus {
+        box-shadow: none;
+      }
+  
+      dl,
+      ol,
+      ul {
+        margin-bottom: 0rem;
+      }
+    }
+  }
+  
+  .paginator-container {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+  
+  
+    .select-itens {
+      display: flex;
+    }
+  
+  }
+  
+  @media (max-width: 575.98px) {
+    .paginator-container {
+      gap: 10px !important;
+      margin: 20px 0;
+  
+      .select-itens {
+        display: none;
+      }
+    }
+  }
+  
+  
+  @media (max-width: 425.98px) {
+    .paginator-container {
+      gap: 3px !important;
+    }
+  }
