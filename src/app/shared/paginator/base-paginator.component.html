@@ -1,0 +1,14 @@
+<div class="paginator-container">
+
+  <div class="paginator-global">
+    <ngb-pagination [collectionSize]="collectionSize" [(page)]="pageIndex" [pageSize]="pageSize" [boundaryLinks]="true"
+      [maxSize]="5" [rotate]="true" (pageChange)="nextOrPreviewed()">
+    </ngb-pagination>
+  </div>
+
+  <div class="select-itens">
+    <select class="form-control" (change)="changeSizePage($event.target)">
+      <option *ngFor="let item of pageSizeSelect" [value]="item.value">{{item.text}}</option>
+    </select>
+  </div>
+</div>
